@@ -26,8 +26,10 @@ No job has a schedule or trigger.
 
 When there is no current `uv.lock` paired with `pyproject.toml`, Jobs falls back to
 `uv pip install --no-cache -r pyproject.toml`. These fixtures use dependency-only
-projects. The wheel task runs the installed `tabulate` package; it does not test
-building or running this project's own package.
+projects. The wheel task runs the installed `tabulate` package to format
+`jobs-dabs-beta-pilot/data/sample.tsv`. It does not test building or running this
+project's own package.
+The wheel task writes its formatted table to `/tmp/jobs-dabs-beta-wheel-output.txt`.
 
 ## Review lock generation next
 

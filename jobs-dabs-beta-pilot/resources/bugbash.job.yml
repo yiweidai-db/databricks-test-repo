@@ -27,7 +27,13 @@ resources:
           python_wheel_task:
             package_name: tabulate
             entry_point: tabulate
-            parameters: ["--help"]
+            parameters:
+              - --header
+              - --format
+              - grid
+              - -o
+              - /tmp/jobs-dabs-beta-wheel-output.txt
+              - ${workspace.file_path}/data/sample.tsv
           environment_key: project
       environments:
         - environment_key: project
