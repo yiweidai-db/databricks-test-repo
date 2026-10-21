@@ -1,0 +1,35 @@
+resources:
+  jobs:
+    project_environment:
+      name: ${bundle.name}-${bundle.target}
+      max_concurrent_runs: 1
+      tasks:
+        - task_key: notebook
+          notebook_task:
+            notebook_path: ../src/check_env.py
+            base_parameters:
+              expected_tabulate: ${var.expected_tabulate}
+              expected_humanize: "4.12.3"
+              project_file: ${workspace.file_path}/pyproject.toml
+          environment_key: project
+        - task_key: script
+          spark_python_task:
+            python_file: ../scripts/check_env.py
+            parameters:
+              - --expected-tabulate
+              - ${var.expected_tabulate}
+              - --expected-humanize
+              - "4.12.3"
+              - --project-file
+              - ${workspace.file_path}/pyproject.toml
+          environment_key: project
+        - task_key: dependency_wheel
+          python_wheel_task:
+            package_name: tabulate
+            entry_point: tabulate
+            parameters: ["--help"]
+          environment_key: project
+      environments:
+        - environment_key: project
+          spec:
+            project_environment: ../pyproject.toml

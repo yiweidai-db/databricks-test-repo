@@ -1,0 +1,24 @@
+bundle:
+  name: jobs-dabs-project-environment-pilot
+
+include:
+  - resources/*.yml
+
+variables:
+  expected_tabulate:
+    default: "0.9.0"
+
+workspace:
+  root_path: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.name}/${bundle.target}
+
+sync:
+  exclude:
+    - .venv/**
+    - .bugbash/**
+    - evidence/**
+
+targets:
+  dev:
+    mode: development
+    default: true
+  bugbash: {}
