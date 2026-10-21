@@ -5,11 +5,14 @@ import sys
 from importlib.metadata import version
 from pathlib import Path
 
+import cowsay
 import tabulate
 
 
 def check_environment(expected_tabulate, expected_humanize="", project_file=""):
-    installed = {"tabulate": version("tabulate")}
+    installed = {"cowsay": version("cowsay"), "tabulate": version("tabulate")}
+    assert installed["cowsay"] == "6.1", installed
+    cowsay.cow("Project environment works!")
     assert installed["tabulate"] == expected_tabulate, installed
     assert tabulate.tabulate([["environment", "ok"]])
     if expected_humanize:

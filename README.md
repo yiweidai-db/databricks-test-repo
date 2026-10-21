@@ -6,7 +6,7 @@ No job has a schedule or trigger.
 
 ## Files to review
 
-- `pyproject.toml`: Existing Git-root environment with `tabulate==0.9.0` and environment version 6.
+- `pyproject.toml`: Git-root environment with `cowsay==6.1`, `tabulate==0.9.0`, and environment version 6.
 - `check_env_notebook.py` and `check_env.py`: Existing Git-root notebook and Python script.
 - `lock_setup.py`: Git-root notebook that runs `%uv sync`.
 - `jobs-dabs-beta-pilot/pyproject.toml`: Bundle environment that also installs `humanize==4.12.3`.
@@ -14,14 +14,17 @@ No job has a schedule or trigger.
 - `jobs-dabs-beta-pilot/resources/bugbash.job.yml`: Three tasks that share the bundle environment.
 - `jobs-dabs-beta-pilot/src/check_env.py` and `jobs-dabs-beta-pilot/scripts/check_env.py`: Bundle dependency probes.
 - `jobs-dabs-beta-pilot/src/lock_setup.py`: Bundle notebook that runs `%uv sync`.
+- `verify_dev_dependencies.py` and `jobs-dabs-beta-pilot/src/verify_dev_dependencies.py`:
+  Separate notebooks for the deferred dev-dependency exclusion check.
 
 ## Review the no-lock case first
 
 1. Create a Databricks Git folder from this repository.
 2. Open `jobs-dabs-beta-pilot/` as an Asset Bundle and select the `dev` target.
 3. Deploy the bundle, then run its job before attaching either project to compute.
-4. Confirm that all three tasks succeed. The notebook and script must print
-   `BUGBASH_EVIDENCE` with `tabulate` 0.9.0 and `humanize` 4.12.3.
+4. Confirm that all three tasks succeed. The notebook and script must print a cow
+   and `BUGBASH_EVIDENCE`
+   with `cowsay` 6.1, `tabulate` 0.9.0, and `humanize` 4.12.3.
 5. Confirm that neither source project has a `uv.lock` file.
 
 When there is no current `uv.lock` paired with `pyproject.toml`, Jobs falls back to
@@ -55,6 +58,18 @@ Deployment files live under the current user's personal `.bundle` directory.
 The dependency probes also print optional project-file hashes. A hash confirms
 which file the probe read; installation logs are required to establish which file
 Jobs used to install dependencies.
+
+## Deferred dev-dependency check
+
+Both projects declare `simplejson==3.20.2` in `[dependency-groups].dev`.
+Runtime verification of dev-dependency exclusion is pending. The smoke job does
+not run this assertion.
+
+After a runtime that supports excluding dev dependency groups is available, open
+the project's `verify_dev_dependencies.py` notebook with its project environment.
+The notebook must print `PASS: dev dependency simplejson is not importable.`
+It fails if `simplejson` imports successfully. Do not uninstall the package to
+make the check pass.
 
 ## CLI
 
